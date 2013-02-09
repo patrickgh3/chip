@@ -15,11 +15,8 @@ namespace TestApp2
     public class Pixel
     {
         private Color _color;
-        
-        public Color Color
-        {
-            get
-            {  return _color; }
+        public Color Color {
+            get { return _color; }
             set
             {
                 _color = value;

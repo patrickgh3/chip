@@ -106,14 +106,15 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ChipUtil.cs" />
     <Compile Include="ColorPicker.cs" />
     <Compile Include="GridOverlay.cs" />
+    <Compile Include="PaletteRect.cs" />
     <Compile Include="Pixel.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="PixelDisplay.cs" />
-    <Compile Include="PixIO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +126,7 @@
   <ItemGroup>
     <Content Include="Assets\butticon_load.png" />
     <Content Include="Assets\butticon_save.png" />
+    <Content Include="Assets\color_picker_gradient.png" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />

@@ -178,10 +178,7 @@ namespace TestApp2
                 PreviousPoint.y = y;
             }
         }
-
-        /// <summary>
-        /// Undoes the last user action to the array of pixels, using UndoStack.
-        /// </summary>
+        
         public void Undo()
         {
             if (UndoStack.Count == 0)
@@ -195,10 +192,7 @@ namespace TestApp2
             UpdatePixelColors(colors);
             PreviousColors = GetCurrentColors();
         }
-
-        /// <summary>
-        /// Redoes the last user undo to the array of pixels, using RedoStack.
-        /// </summary>
+        
         public void Redo()
         {
             if (RedoStack.Count == 0)
@@ -213,13 +207,9 @@ namespace TestApp2
             PreviousColors = colors;
         }
 
-        /// <summary>
-        /// Adds a new element onto UndoStack to store a user action.
-        /// </summary>
         private void AddUndoAction()
         {
             if (ColorArraysEqual(GetCurrentColors(), PreviousColors)) return;
-            //debugText.Text = "Added undo action.";
             // First, if we had one, add the previous state to the stack.
             UndoStack.Push(PreviousColors);
             PreviousColors = GetCurrentColors();
@@ -227,10 +217,7 @@ namespace TestApp2
             // Then, save the current state so we can add it to the stack later, if we need to.
 
         }
-
-        /// <summary>
-        /// Changes the color of all the pixels to the color array passed in. Invoked by Undo and Redo.
-        /// </summary>
+        
         private void UpdatePixelColors(Color[][] colors)
         {
             for (int x = 0; x < Pixels.Length; x++)
@@ -242,10 +229,7 @@ namespace TestApp2
                 }
             }
         }
-
-        /// <summary>
-        /// Retrieve an array of the current pixel Colors.
-        /// </summary>
+        
         public Color[][] GetCurrentColors()
         {
             Color[][] colors = new Color[Pixels.Length][];
