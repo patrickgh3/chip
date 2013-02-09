@@ -17,8 +17,6 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace TestApp2
 {
     /// <summary>
@@ -45,12 +43,12 @@ namespace TestApp2
             
 
             PixDisplay = new PixelDisplay(pixelCanvas, debugText);
-            Picker = new ColorPicker(new Slider[] { colorSlider1, colorSlider2, colorSlider3 }, pickerRectangle);
+            Picker = new ColorPicker(colorSlider1, colorSlider2, colorSlider3, panel1, panel2, hueRect, overlayRect);
 
             // Set values now since PixDisplay isn't null.
             zoomSlider.Maximum = 10000;
             zoomSlider.Minimum = 100;
-            zoomSlider.Value = 1000;
+            zoomSlider.Value = 2000;
             zoomSlider.SmallChange = 100;
             zoomSlider.LargeChange = 100;
             zoomSlider.StepFrequency = 100;
@@ -94,8 +92,8 @@ namespace TestApp2
             if (args.VirtualKey == VirtualKey.Control) CtrlDown = true;
             if (CtrlDown)
             {
-                if (args.VirtualKey == VirtualKey.Z) PixDisplay.Undo();
-                if (args.VirtualKey == VirtualKey.Y) PixDisplay.Redo();
+                if (args.VirtualKey == VirtualKey.Z && !PixDisplay.PointerDown) PixDisplay.Undo();
+                if (args.VirtualKey == VirtualKey.Y && !PixDisplay.PointerDown) PixDisplay.Redo();
             }
 
             switch (args.VirtualKey)
@@ -113,8 +111,8 @@ namespace TestApp2
 
         void CoreWindow_PointerWheelChanged(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.PointerEventArgs args)
         {
-            if (args.CurrentPoint.Properties.MouseWheelDelta == -120) zoomSlider.Value -= 100;
-            if (args.CurrentPoint.Properties.MouseWheelDelta == 120) zoomSlider.Value += 100;
+            if (args.CurrentPoint.Properties.MouseWheelDelta == -120) zoomSlider.Value -= 400;
+            if (args.CurrentPoint.Properties.MouseWheelDelta == 120) zoomSlider.Value += 400;
         }
         
         private void ZoomSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)

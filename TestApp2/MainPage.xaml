@@ -9,15 +9,26 @@
     
     <Grid x:Name="backGrid" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" >
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="550*"/>
-            <ColumnDefinition Width="133*"/>
+            <ColumnDefinition Width="483*"/>
+            <ColumnDefinition Width="200*"/>
         </Grid.ColumnDefinitions>
         <Canvas x:Name="pixelCanvas"/>
         <StackPanel Grid.Column="1" Margin="0,0,10,0">
-            <Rectangle x:Name="pickerRectangle" Height="50" Width="50" Fill="Black" />
-            <Slider x:Name="colorSlider1" Maximum="255" Orientation="Horizontal" Margin="0" Foreground="Transparent" />
-            <Slider x:Name="colorSlider2" Foreground="Transparent" Maximum="255" />
-            <Slider x:Name="colorSlider3" Foreground="Transparent" Maximum="255" />
+            <StackPanel Orientation="Horizontal" Margin="0,10">
+                <Grid>
+                    <Rectangle x:Name="hueRect" Width="256" Height="256" Fill="Red" />
+                    <Rectangle x:Name="overlayRect" Width="256" Height="256" >
+                        <Rectangle.Fill>
+                            <ImageBrush ImageSource="Assets/color_picker_gradient.png"/>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </Grid>
+                <Slider x:Name="colorSlider1" Foreground="Transparent" Minimum="1" Maximum="360" Orientation="Vertical" />
+                <Slider x:Name="colorSlider2" Foreground="Transparent" Minimum="0" Maximum="100" Orientation="Vertical" Value="100" />
+                <Slider x:Name="colorSlider3" Foreground="Transparent" Minimum="0" Maximum="100" Orientation="Vertical" Value="100" />
+            </StackPanel>
+            <StackPanel x:Name="panel1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0"/>
+            <StackPanel x:Name="panel2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0"/>
             <StackPanel Orientation="Horizontal">
                 <RadioButton x:Name="radio1" IsChecked="True" Checked="Radio1_Checked" />
                 <RadioButton x:Name="radio2" Checked="Radio2_Checked" />
