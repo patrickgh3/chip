@@ -33,11 +33,16 @@
                 <RadioButton x:Name="radio1" IsChecked="True" Checked="Radio1_Checked" />
                 <RadioButton x:Name="radio2" Checked="Radio2_Checked" />
                 <RadioButton x:Name="radio3" Checked="Radio3_Checked" />
+                <RadioButton x:Name="radio4" Checked="Radio4_Checked" />
+                <RadioButton x:Name="radio5" Checked="Radio5_Checked" />
+                <RadioButton x:Name="radio6" Checked="Radio6_Checked" />
+                <RadioButton x:Name="radio7" Checked="Radio7_Checked" />
             </StackPanel>
             <Slider x:Name="zoomSlider" ValueChanged="ZoomSlider_ValueChanged" Margin="0" Foreground="Transparent" />
             <StackPanel Orientation="Horizontal">
                 <CheckBox x:Name="borderCheckBox" Checked="BorderCheckBox_Checked" Unchecked="BorderCheckBox_Unchecked" ToolTipService.ToolTip="Grid Border" IsChecked="False" />
                 <CheckBox x:Name="gridCheckBox" Checked="GridCheckBox_Checked" Unchecked="GridCheckBox_Unchecked" ToolTipService.ToolTip="Grid" />
+                <Button x:Name="zoomResetButton" Click="ZoomResetButton_Clicked" Content="Pos" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="saveButton" Width="48" Height="48" Style="{StaticResource IconButton}" Click="SaveButton_Clicked">

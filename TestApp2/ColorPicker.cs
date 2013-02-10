@@ -72,12 +72,14 @@ namespace TestApp2
             PalIndex = index;
             PalRects[PalIndex].Select();
             CurrentColor = PalRects[PalIndex].Color;
-            
-            double hue, sat, val;
-            ChipUtil.RgbToHsv(CurrentColor.R, CurrentColor.G, CurrentColor.B, out hue, out sat, out val);
-            Slider1.Value = hue;
-            Slider2.Value = sat * 100;
-            Slider3.Value = val * 100;
+            UpdateSliders();
+        }
+
+        public void SetCurrentColor(Color c)
+        {
+            CurrentColor = c;
+            PalRects[PalIndex].Color = CurrentColor;
+            UpdateSliders();
         }
         
         void Slider1_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
@@ -109,6 +111,15 @@ namespace TestApp2
             HueColor.G = g;
             HueColor.B = b;
             ((SolidColorBrush)HueRect.Fill).Color = HueColor;
+        }
+
+        void UpdateSliders()
+        {
+            double hue, sat, val;
+            ChipUtil.RgbToHsv(CurrentColor.R, CurrentColor.G, CurrentColor.B, out hue, out sat, out val);
+            Slider1.Value = hue;
+            Slider2.Value = sat * 100;
+            Slider3.Value = val * 100;
         }
     }
 }
