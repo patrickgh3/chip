@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Diagnostics;
 
 using Windows.UI;
 using Windows.UI.Xaml.Controls;
@@ -35,14 +36,16 @@ namespace TestApp2
         public readonly Canvas PixelCanvas;
         TextBlock StatusText;
         GridOverlay Overlay;
+        ColorPicker Picker;
 
         struct Point { public int x; public int y; }
         struct PrecisePoint { public double x; public double y; }
         Point PreviousPoint;
-        Point LinePoint1;
-        Point LinePoint2;
+        Point Point1;
+        Point Point2;
+        bool PressedInsideGrid;
 
-        public enum DrawTool { Pencil, FillBucket, Line };
+        public enum DrawTool { Pencil, Dropper, FillBucket, Line, Rectangle, Oval, Grab };
 
         
         
@@ -52,16 +55,17 @@ namespace TestApp2
         /// <summary>
         /// Constructor for PixelDisplay. Requires a Canvas reference.
         /// </summary>
-        public PixelDisplay(Canvas c, TextBlock t)
+        public PixelDisplay(Canvas c, TextBlock t, ColorPicker p)
         {
             PixelCanvas = c;
             StatusText = t;
+            Picker = p;
             PixelSize = 20;
             XCenter = 550;
             YCenter = 450;
             PreviousPoint = new Point() { x = -1, y = -1 };
-            LinePoint1 = new Point() { x = -1, y = -1 };
-            LinePoint2 = new Point() { x = -1, y = -1 };
+            Point1 = new Point() { x = -1, y = -1 };
+            Point2 = new Point() { x = -1, y = -1 };
 
             Tool = DrawTool.Pencil;
             Overlay = new GridOverlay(this);
@@ -126,23 +130,50 @@ namespace TestApp2
             PointerDown = b;
             bool pointerInsideGrid = pointerx > XOffset && pointerx < XOffset + Pixels.Length * PixelSize &&
                                      pointery > YOffset && pointery < YOffset + Pixels[0].Length * PixelSize;
+            PressedInsideGrid = pointerInsideGrid;
             if (pointerInsideGrid)
             {
                 int x = (int)((pointerx - XOffset) / PixelSize);
                 int y = (int)((pointery - YOffset) / PixelSize);
                 if (PointerDown)
                 {
-                    if (Tool == DrawTool.Pencil) PencilTool(x, y, ColorPicker.CurrentColor);
-                    else if (Tool == DrawTool.FillBucket) {
-                        FillTool(x, y, ColorPicker.CurrentColor, Pixels[x][y].Color);
+                    if (Tool == DrawTool.Pencil)
+                    {
+                        PencilTool(x, y, ColorPicker.CurrentColor);
+                        Point1.x = x;
+                        Point1.y = y;
+                    }
+                    else if (Tool == DrawTool.Dropper)
+                    {
+                        Picker.SetCurrentColor(Pixels[x][y].Color);
+                    }
+                    else if (Tool == DrawTool.FillBucket)
+                    {
+                        if (Pixels[x][y].Color != ColorPicker.CurrentColor) FillTool(x, y, ColorPicker.CurrentColor, Pixels[x][y].Color);
                         AddUndoAction();
                     }
                     else if (Tool == DrawTool.Line)
                     {
-                        LinePoint1.x = x;
-                        LinePoint1.y = y;
-                        LinePoint2.x = x;
-                        LinePoint2.y = y;
+                        Point1.x = x;
+                        Point1.y = y;
+                        Point2.x = x;
+                        Point2.y = y;
+                        PencilTool(x, y, ColorPicker.CurrentColor);
+                    }
+                    else if (Tool == DrawTool.Rectangle)
+                    {
+                        Point1.x = x;
+                        Point1.y = y;
+                        Point2.x = x;
+                        Point2.y = y;
+                        PencilTool(x, y, ColorPicker.CurrentColor);
+                    }
+                    else if (Tool == DrawTool.Oval)
+                    {
+                        Point1.x = x;
+                        Point1.y = y;
+                        Point2.x = x;
+                        Point2.y = y;
                         PencilTool(x, y, ColorPicker.CurrentColor);
                     }
                 }
@@ -152,6 +183,8 @@ namespace TestApp2
                 if (Tool == DrawTool.Pencil) AddUndoAction();
                 else if (Tool == DrawTool.FillBucket) { }
                 else if (Tool == DrawTool.Line) AddUndoAction();
+                else if (Tool == DrawTool.Rectangle) AddUndoAction();
+                else if (Tool == DrawTool.Oval) AddUndoAction();
             }
         }
 
@@ -162,21 +195,51 @@ namespace TestApp2
             {
                 int x = (int)((pointerx - XOffset) / PixelSize);
                 int y = (int)((pointery - YOffset) / PixelSize);
-                if (PreviousPoint.x == -1) { PreviousPoint.x = x; PreviousPoint.y = y; }
 
-                if (Tool == DrawTool.Pencil && PointerDown) PencilTool(x, y, ColorPicker.CurrentColor);
+                if (Tool == DrawTool.Pencil && PointerDown)
+                {
+                    LineTool(Point1.x, Point1.y, x, y, ColorPicker.CurrentColor);
+                    Point1.x = x;
+                    Point1.y = y;
+                }
                 else if (Tool == DrawTool.FillBucket) { }
                 else if (Tool == DrawTool.Line && PointerDown)
                 {
-                    LinePoint2.x = x;
-                    LinePoint2.y = y;
+                    Point2.x = x;
+                    Point2.y = y;
                     UpdatePixelColors(PreviousColors);
-                    LineTool(LinePoint1.x, LinePoint1.y, LinePoint2.x, LinePoint2.y, ColorPicker.CurrentColor);
+                    LineTool(Point1.x, Point1.y, Point2.x, Point2.y, ColorPicker.CurrentColor);
                 }
-
-                PreviousPoint.x = x;
-                PreviousPoint.y = y;
+                else if (Tool == DrawTool.Rectangle && PointerDown)
+                {
+                    Point2.x = x;
+                    Point2.y = y;
+                    UpdatePixelColors(PreviousColors);
+                    RectangleTool(Point1.x, Point1.y, Point2.x, Point2.y, ColorPicker.CurrentColor);
+                }
+                else if (Tool == DrawTool.Oval && PointerDown)
+                {
+                    Point2.x = x;
+                    Point2.y = y;
+                    UpdatePixelColors(PreviousColors);
+                    OvalTool(Point1.x, Point1.y, Point2.x, Point2.y, ColorPicker.CurrentColor);
+                }
             }
+            if (Tool == DrawTool.Grab && PointerDown && PressedInsideGrid)
+            {
+                XCenter += pointerx - PreviousPoint.x;
+                YCenter += pointery - PreviousPoint.y;
+                UpdateDisplay();
+            }
+            PreviousPoint.x = pointerx;
+            PreviousPoint.y = pointery;
+        }
+
+        public void ResetPosition()
+        {
+            XCenter = 550;
+            YCenter = 450;
+            UpdateDisplay();
         }
         
         public void Undo()
@@ -230,7 +293,7 @@ namespace TestApp2
             }
         }
         
-        public Color[][] GetCurrentColors()
+        private Color[][] GetCurrentColors()
         {
             Color[][] colors = new Color[Pixels.Length][];
             for (int x = 0; x < Pixels.Length; x++)
@@ -262,7 +325,7 @@ namespace TestApp2
 
         private void PencilTool(int x, int y, Color c)
         {
-            LineTool(PreviousPoint.x, PreviousPoint.y, x, y, c);
+            Pixels[x][y].Color = c;
         }
 
         private void FillTool(int x, int y, Color c, Color overridden)
@@ -307,6 +370,95 @@ namespace TestApp2
                     x += slope.x;
                 }
             }
+        }
+
+        private void RectangleTool(int x1, int y1, int x2, int y2, Color c)
+        {
+            int xo = Math.Sign(x2 - x1);
+            for (int x = x1; (x <= x2 && x2 > x1) || (x >= x2 && x1 > x2); x += xo)
+            {
+                Pixels[x][y1].Color = c;
+                Pixels[x][y2].Color = c;
+            }
+            int yo = Math.Sign(y2 - y1);
+            for (int y = y1; (y <= y2 && y2 > y1) || (y >= y2 && y1 > y2); y += yo)
+            {
+                Pixels[x1][y].Color = c;
+                Pixels[x2][y].Color = c;
+            }
+        }
+
+        // http://gamedev.sk/bresenham-s-ellipse-algorithm
+        // TODO: fix pixels too concentrated :(
+        private void OvalTool(int x1, int y1, int x2, int y2, Color c)
+        {
+
+            
+            //int a = Math.Abs((int)((x2 - x1) / 2));
+            //int b = Math.Abs((int)((y2 - y1) / 2));
+            //int x0 = Math.Max(x1, x2) - a/2;
+            //int y0 = Math.Max(y1, y2) - b/2;
+            
+            int x0 = x1;
+            int y0 = y1;
+            int a = Math.Abs(x2 - x1);
+            int b = Math.Abs(y2 - y1);
+
+
+            if (a == 0 || b == 0)
+                return;
+            int a2 = 2 * a * a;
+            int b2 = 2 * b * b;
+            int error = a * a * b;
+            int x = 0;
+            int y = b;
+            int stopy = 0;
+            int stopx = a2 * b;
+            while (stopy <= stopx)
+            {
+                SetPixelChecked(x0 + x, y0 + y, c);
+                SetPixelChecked(x0 - x, y0 + y, c);
+                SetPixelChecked(x0 - x, y0 - y, c);
+                SetPixelChecked(x0 + x, y0 - y, c);
+                Debug.WriteLine("x0: " + x0 + " x: " + x);
+                x++;
+                error -= b2 * (x - 1);
+                stopy += b2;
+                if (error <= 0)
+                {
+                    error += a2 * (y - 1);
+                    y--;
+                    stopx -= a2;
+                }
+            }
+
+            error = b * b * a;
+            x = a;
+            y = 0;
+            stopy = b2 * a;
+            stopx = 0;
+            while (stopy >= stopx)
+            {
+                SetPixelChecked(x0 + x, y0 + y, c);
+                SetPixelChecked(x0 - x, y0 + y, c);
+                SetPixelChecked(x0 - x, y0 - y, c);
+                SetPixelChecked(x0 + x, y0 - y, c);
+                y++;
+                error -= a2 * (y - 1);
+                stopx += a2;
+                if (error < 0)
+                {
+                    error += b2 * (x - 1);
+                    x--;
+                    stopy -= b2;
+                }
+            }
+        }
+
+        void SetPixelChecked(int x, int y, Color c)
+        {
+            if (x >= 0 && x < Pixels.Length && y >= 0 && y < Pixels[0].Length)
+                Pixels[x][y].Color = c;
         }
 
         // SETTERS FROM EVENTS //

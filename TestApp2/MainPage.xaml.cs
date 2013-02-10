@@ -28,8 +28,6 @@ namespace TestApp2
         ColorPicker Picker;
         Boolean CtrlDown;
 
-
-
         public MainPage()
         {
             this.InitializeComponent();
@@ -41,9 +39,8 @@ namespace TestApp2
             Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
             Window.Current.CoreWindow.PointerWheelChanged += CoreWindow_PointerWheelChanged;
             
-
-            PixDisplay = new PixelDisplay(pixelCanvas, debugText);
             Picker = new ColorPicker(colorSlider1, colorSlider2, colorSlider3, panel1, panel2, hueRect, overlayRect);
+            PixDisplay = new PixelDisplay(pixelCanvas, debugText, Picker);
 
             // Set values now since PixDisplay isn't null.
             zoomSlider.Maximum = 10000;
@@ -53,6 +50,7 @@ namespace TestApp2
             zoomSlider.LargeChange = 100;
             zoomSlider.StepFrequency = 100;
             borderCheckBox.IsChecked = true;
+            //gridCheckBox.IsChecked = true;
         }
 
         // EVENT HANDLERS //
@@ -117,7 +115,7 @@ namespace TestApp2
         
         private void ZoomSlider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            PixDisplay.SetPixelSize((int)zoomSlider.Value / 100);
+            PixDisplay.SetPixelSize((int)(zoomSlider.Value / 100));
         }
 
         private void GridCheckBox_Checked(object sender, RoutedEventArgs e)
@@ -145,6 +143,26 @@ namespace TestApp2
             PixDisplay.SetDrawTool(PixelDisplay.DrawTool.Line);
         }
 
+        private void Radio4_Checked(object sender, RoutedEventArgs e)
+        {
+            PixDisplay.SetDrawTool(PixelDisplay.DrawTool.Rectangle);
+        }
+
+        private void Radio5_Checked(object sender, RoutedEventArgs e)
+        {
+            PixDisplay.SetDrawTool(PixelDisplay.DrawTool.Oval);
+        }
+
+        private void Radio6_Checked(object sender, RoutedEventArgs e)
+        {
+            PixDisplay.SetDrawTool(PixelDisplay.DrawTool.Dropper);
+        }
+
+        private void Radio7_Checked(object sender, RoutedEventArgs e)
+        {
+            PixDisplay.SetDrawTool(PixelDisplay.DrawTool.Grab);
+        }
+
         private void BorderCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             PixDisplay.SetBorderEnabled(true);
@@ -158,6 +176,11 @@ namespace TestApp2
         private void SaveButton_Clicked(object sender, RoutedEventArgs e)
         {
             //PixIO.Save(PixDisplay.GetCurrentColors());
+        }
+
+        private void ZoomResetButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            PixDisplay.ResetPosition();
         }
         
     }
