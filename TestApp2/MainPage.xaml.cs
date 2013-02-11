@@ -17,12 +17,13 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
 
+
 namespace TestApp2
 {
     /// <summary>
     /// The main page of the application. This stores several "global" application values.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : LayoutAwarePage
     {
         PixelDisplay PixDisplay;
         ColorPicker Picker;
