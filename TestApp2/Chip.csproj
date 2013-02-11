@@ -7,7 +7,7 @@
     <ProjectGuid>{F852AA50-BAB3-4EFC-A2C6-3C37B10F81C8}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Chip</RootNamespace>
+    <RootNamespace>TestApp2</RootNamespace>
     <AssemblyName>Chip</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
@@ -108,6 +108,7 @@
     </Compile>
     <Compile Include="ChipUtil.cs" />
     <Compile Include="ColorPicker.cs" />
+    <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="GridOverlay.cs" />
     <Compile Include="PaletteRect.cs" />
     <Compile Include="Pixel.cs" />

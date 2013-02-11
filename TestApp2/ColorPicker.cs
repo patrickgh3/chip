@@ -32,8 +32,6 @@ namespace TestApp2
 
         public ColorPicker(Slider s1, Slider s2, Slider s3, StackPanel p1, StackPanel p2, Rectangle hr, Rectangle or)
         {
-            // TODO: possibly replace Rectangle[] with some sort of container/StackPanel and
-            // dynamically add however many Rectangles to that guy.
             Slider1 = s1;
             Slider2 = s2;
             Slider3 = s3;
