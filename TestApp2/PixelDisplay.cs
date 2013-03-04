@@ -70,6 +70,7 @@ namespace TestApp2
             Tool = DrawTool.Pencil;
             Overlay = new GridOverlay(this);
             NewImage(16,16);
+            Overlay.ResetLines();
         }
 
         private void UpdateDisplay()
@@ -92,7 +93,7 @@ namespace TestApp2
                     PixelCanvas.Children.Add(rect);
                 }
             }
-
+            Overlay.ResetLines();
             Overlay.UpdateDisplay();
         }
 
@@ -101,11 +102,11 @@ namespace TestApp2
         /// </summary>
         public void NewImage(int width, int height)
         {
-            Pixels = new Pixel[16][];
-            for (int x = 0; x < 16; x++)
+            Pixels = new Pixel[width][];
+            for (int x = 0; x < width; x++)
             {
-                Pixels[x] = new Pixel[16];
-                for (int y = 0; y < 16; y++)
+                Pixels[x] = new Pixel[height];
+                for (int y = 0; y < height; y++)
                 {
                     Pixels[x][y] = new Pixel(Colors.White);
                 }
@@ -114,15 +115,28 @@ namespace TestApp2
             UndoStack = new Stack<Color[][]>();
             RedoStack = new Stack<Color[][]>();
             UpdateDisplay();
-            // TODO: reset overlay here
         }
 
         /// <summary>
         /// Clear all data for the previous image session, and load the new pixel data.
         /// </summary>
-        public void loadImage(Color[][] c)
+        public void LoadImage(Color[][] source)
         {
-
+            int width = source.Length;
+            int height = source[0].Length;
+            Pixels = new Pixel[width][];
+            for (int x = 0; x < width; x++)
+            {
+                Pixels[x] = new Pixel[height];
+                for (int y = 0; y < height; y++)
+                {
+                    Pixels[x][y] = new Pixel(source[x][y]);
+                }
+            }
+            PreviousColors = GetCurrentColors();
+            UndoStack = new Stack<Color[][]>();
+            RedoStack = new Stack<Color[][]>();
+            UpdateDisplay();
         }
 
         public void PointerChanged(int pointerx, int pointery, bool b)
@@ -312,7 +326,7 @@ namespace TestApp2
             if (c1.Length != c2.Length || c1[0].Length != c2[0].Length) throw new FormatException("Color Array Dimensions not equal. Sadface.");
             for (int x = 0; x < c1.Length; x++)
             {
-                for (int y = 0; y < c1.Length; y++)
+                for (int y = 0; y < c1[0].Length; y++)
                 {
                     if (c1[x][y].R != c2[x][y].R || c1[x][y].G != c2[x][y].G || c1[x][y].B != c2[x][y].B) return false;
                 }
