@@ -19,7 +19,7 @@ namespace TestApp2
     {
         public static PixelDisplay PixDisplay { set; private get; }
 
-        public static async void TestLoad()
+        public static async void Load()
         {
             FileOpenPicker openPicker = new FileOpenPicker();
             openPicker.ViewMode = PickerViewMode.List;
@@ -60,15 +60,63 @@ namespace TestApp2
                 }
                 PixDisplay.LoadImage(LoadedColors);
             }
-            else
-            {
-                Debug.WriteLine("ChipIO: The file is null.");
-            }
         }
 
-        public static async void TestSave()
+        public static async void Save()
         {
+            Color[][] toSave = PixDisplay.PreviousColors;
+            var picker = new Windows.Storage.Pickers.FileSavePicker();
+            picker.FileTypeChoices.Add("PNG image", new string[] { ".png" });
+            picker.DefaultFileExtension = ".png";
+            var file = await picker.PickSaveFileAsync();
+            
+            if (file != null)
+            {
+                System.Guid encoderId;
+                switch (file.FileType) {
+                    case ".png":
+                    default:
+                        encoderId = Windows.Graphics.Imaging.BitmapEncoder.PngEncoderId;
+                        break;
+                }
+                var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite);
+                stream.Size = 0;
+                var encoder = await Windows.Graphics.Imaging.BitmapEncoder.CreateAsync(
+                    encoderId,
+                    stream
+                    );
 
+
+                uint width = (uint)toSave.Length;
+                uint height = (uint)toSave[0].Length;
+                byte[] pixels = new byte[width*height*4];
+                int k = 0;
+                for (int i=0; i<height; i++)
+                {
+                    for (int j=0; j<width; j++)
+                    {
+                        pixels[k++] = toSave[j][i].R;
+                        pixels[k++] = toSave[j][i].G;
+                        pixels[k++] = toSave[j][i].B;
+                        pixels[k++] = toSave[j][i].A;
+
+                    }
+                }
+                encoder.SetPixelData(
+                    Windows.Graphics.Imaging.BitmapPixelFormat.Rgba8,
+                    Windows.Graphics.Imaging.BitmapAlphaMode.Straight,
+                    width,
+                    height,
+                    96,
+                    96,
+                    pixels
+                    );
+                try {
+                    await encoder.FlushAsync();
+                } catch (Exception err) {
+                    Debug.WriteLine("Error encoding the file for save.");
+                }
+            }
         }
     }
 }

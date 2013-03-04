@@ -47,6 +47,7 @@
                 <Button x:Name="zoomResetButton" Click="ZoomResetButton_Clicked" Content="Pos" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
+                <Button x:Name="loadButton" Width="48" Height="48" Style="{StaticResource IconButton}" Click="LoadButton_Clicked" Content="Load"/> 
                 <Button x:Name="saveButton" Width="48" Height="48" Style="{StaticResource IconButton}" Click="SaveButton_Clicked">
                     <Button.Background>
                         <ImageBrush ImageSource="Assets/butticon_save.png"/>

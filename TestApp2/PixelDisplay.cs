@@ -19,7 +19,7 @@ namespace TestApp2
         Pixel[][] Pixels;
         Stack<Color[][]> UndoStack;
         Stack<Color[][]> RedoStack;
-        Color[][] PreviousColors;
+        public Color[][] PreviousColors { get; private set; }
 
         public int XCenter { get; private set; }
         public int YCenter { get; private set; }
