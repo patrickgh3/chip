@@ -51,7 +51,7 @@ namespace TestApp2
             zoomSlider.LargeChange = 100;
             zoomSlider.StepFrequency = 100;
             borderCheckBox.IsChecked = true;
-            //gridCheckBox.IsChecked = true;
+            ChipIO.PixDisplay = PixDisplay;
         }
 
         // EVENT HANDLERS //
@@ -176,7 +176,7 @@ namespace TestApp2
 
         private void SaveButton_Clicked(object sender, RoutedEventArgs e)
         {
-            //PixIO.Save(PixDisplay.GetCurrentColors());
+            ChipIO.TestLoad();
         }
 
         private void ZoomResetButton_Clicked(object sender, RoutedEventArgs e)

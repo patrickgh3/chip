@@ -34,14 +34,18 @@ namespace TestApp2
             GridBrush = new SolidColorBrush(Colors.LightGray);
             GridBrushBorder = new SolidColorBrush(Colors.Gray);
             GridBrushSelect = new SolidColorBrush(Colors.DimGray);
-            HLines = new Line[15];
-            VLines = new Line[15];
-            BorderLines = new Line[4];
-            for (int i = 0; i < HLines.Length; i++) HLines[i] = new Line() { Stroke = GridBrush };
-            for (int i = 0; i < VLines.Length; i++) VLines[i] = new Line() { Stroke = GridBrush };
-            for (int i = 0; i < BorderLines.Length; i++) BorderLines[i] = new Line() { Stroke = GridBrushBorder };
             SelectRect1 = new Rectangle() { Stroke = GridBrushSelect };
             SelectRect2 = new Rectangle() { Stroke = GridBrushSelect };
+            BorderLines = new Line[4];
+            for (int i = 0; i < BorderLines.Length; i++) BorderLines[i] = new Line() { Stroke = GridBrushBorder };
+        }
+
+        public void ResetLines()
+        {
+            HLines = new Line[Display.GetPixelsHeight()-1];
+            VLines = new Line[Display.GetPixelsWidth()-1];
+            for (int i = 0; i < HLines.Length; i++) HLines[i] = new Line() { Stroke = GridBrush };
+            for (int i = 0; i < VLines.Length; i++) VLines[i] = new Line() { Stroke = GridBrush };
         }
 
 
