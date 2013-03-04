@@ -174,9 +174,14 @@ namespace TestApp2
             PixDisplay.SetBorderEnabled(false);
         }
 
+        private void LoadButton_Clicked(object sender, RoutedEventArgs e)
+        {
+            ChipIO.Load();
+        }
+
         private void SaveButton_Clicked(object sender, RoutedEventArgs e)
         {
-            ChipIO.TestLoad();
+            ChipIO.Save();
         }
 
         private void ZoomResetButton_Clicked(object sender, RoutedEventArgs e)
