@@ -56,6 +56,10 @@ namespace TestApp2
         {
             int gridWidth = Display.GetPixelsWidth() * Display.PixelSize;
             int gridHeight = Display.GetPixelsHeight() * Display.PixelSize;
+            int minX = 0;
+            int minY = 0;
+            int maxX = 1000;
+            int maxY = 900;
             for (int i = 0; i < HLines.Length; i++)
             {
                 Line line = HLines[i];
@@ -63,7 +67,10 @@ namespace TestApp2
                 line.X1 = Display.XOffset;
                 line.X2 = Display.XOffset + gridWidth;
                 line.Y1 = line.Y2 = Display.YOffset + (i + 1) * Display.PixelSize;
-                if (Display.GridEnabled) Display.PixelCanvas.Children.Add(line);
+
+                if (line.Y1 < minY || line.Y1 > maxY) continue;
+                if (!Display.GridEnabled) continue;
+                Display.PixelCanvas.Children.Add(line);
             }
             for (int i = 0; i < VLines.Length; i++)
             {
@@ -72,7 +79,10 @@ namespace TestApp2
                 line.Y1 = Display.YOffset;
                 line.Y2 = Display.YOffset + gridHeight;
                 line.X1 = line.X2 = Display.XOffset + (i + 1) * Display.PixelSize;
-                if (Display.GridEnabled) Display.PixelCanvas.Children.Add(line);
+
+                if (line.X1 < minX || line.X1 > maxX) continue;
+                if (!Display.GridEnabled) continue;
+                Display.PixelCanvas.Children.Add(line);
             }
             for (int i = 0; i < BorderLines.Length; i++)
             {

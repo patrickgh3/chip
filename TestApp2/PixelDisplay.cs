@@ -70,7 +70,6 @@ namespace TestApp2
             Tool = DrawTool.Pencil;
             Overlay = new GridOverlay(this);
             NewImage(16,16);
-            Overlay.ResetLines();
         }
 
         private void UpdateDisplay()
@@ -81,19 +80,25 @@ namespace TestApp2
             YOffset = YCenter - gridHeight / 2;
 
             PixelCanvas.Children.Clear();
+            int minX = 0;
+            int minY = 0;
+            int maxX = 1000; // TODO: replace these values (and the ones in GridOverlay.UpdateDisplay) with ones from the actual window size.
+            int maxY = 900;
             for (int x = 0; x < Pixels.Length; x++)
             {
                 for (int y = 0; y < Pixels[0].Length; y++)
                 {
+                    int rectX = XOffset + x * PixelSize;
+                    int rectY = YOffset + y * PixelSize;
+                    if (rectX + PixelSize < minX || rectX > maxX || rectY + PixelSize < minY || rectY > maxY) continue; 
                     Rectangle rect = Pixels[x][y].Rect;
                     rect.Width = PixelSize;
                     rect.Height = PixelSize;
-                    Canvas.SetLeft(rect, XOffset + x * PixelSize);
-                    Canvas.SetTop(rect, YOffset + y * PixelSize);
+                    Canvas.SetLeft(rect, rectX);
+                    Canvas.SetTop(rect, rectY);
                     PixelCanvas.Children.Add(rect);
                 }
             }
-            Overlay.ResetLines();
             Overlay.UpdateDisplay();
         }
 
@@ -114,6 +119,7 @@ namespace TestApp2
             PreviousColors = GetCurrentColors();
             UndoStack = new Stack<Color[][]>();
             RedoStack = new Stack<Color[][]>();
+            Overlay.ResetLines();
             UpdateDisplay();
         }
 
@@ -136,6 +142,7 @@ namespace TestApp2
             PreviousColors = GetCurrentColors();
             UndoStack = new Stack<Color[][]>();
             RedoStack = new Stack<Color[][]>();
+            Overlay.ResetLines();
             UpdateDisplay();
         }
 
