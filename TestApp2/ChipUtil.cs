@@ -99,10 +99,7 @@ namespace TestApp2
             g = (byte)(Clamp((int)(G * 255.0)));
             b = (byte)(Clamp((int)(B * 255.0)));
         }
-
-        /// <summary>
-        /// Clamp a value to 0-255
-        /// </summary>
+        
         static int Clamp(int i)
         {
             if (i < 0) return 0;
@@ -142,6 +139,19 @@ namespace TestApp2
             computedS = (maxRGB - minRGB) / maxRGB;
             computedV = maxRGB;
 
+        }
+
+        // http://www.switchonthecode.com/tutorials/javascript-interactive-color-picker
+        public static void PosToHsv(int x, int y, double hue, out double s, out double v)
+        {
+            s = 1 - (double)y / 255.0;
+            v = (double)x / 255.0;
+        }
+
+        public static void HsvToPos(double s, double v, out int x, out int y)
+        {
+            x = (int)(v * 255);
+            y = (int)((1 - s) * 255);
         }
     }
 }

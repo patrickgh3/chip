@@ -44,9 +44,10 @@ namespace TestApp2
             Window.Current.CoreWindow.PointerWheelChanged += CoreWindow_PointerWheelChanged;
             Window.Current.SizeChanged += Current_SizeChanged;
             
-            Picker = new ColorPicker(colorSlider1, colorSlider2, colorSlider3, panel1, panel2, hueRect, overlayRect);
+            Picker = new ColorPicker(colorSlider1, colorSlider2, colorSlider3, panel1, panel2, hueRect, overlayRect, pickerCanvas);
             PixDisplay = new PixelDisplay(pixelCanvas, debugText, Picker);
-
+            pickerCanvas.PointerPressed += pickerCanvas_PointerPressed;
+            
             // Set values now since PixDisplay isn't null.
             zoomSlider.Maximum = 10000;
             zoomSlider.Minimum = 100;
@@ -56,6 +57,11 @@ namespace TestApp2
             zoomSlider.StepFrequency = 100;
             borderCheckBox.IsChecked = true;
             ChipIO.PixDisplay = PixDisplay;
+        }
+
+        void pickerCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            Debug.WriteLine("ohai");
         }
         
         // EVENT HANDLERS //
@@ -96,6 +102,7 @@ namespace TestApp2
             int x = (int)args.CurrentPoint.Position.X;
             int y = (int)args.CurrentPoint.Position.Y;
             PixDisplay.PointerMoved(x, y);
+            Picker.PointerMoved(x, y);
         }
 
         void CoreWindow_PointerPressed(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.PointerEventArgs args)
@@ -103,6 +110,7 @@ namespace TestApp2
             int x = (int)args.CurrentPoint.Position.X;
             int y = (int)args.CurrentPoint.Position.Y;
             PixDisplay.PointerChanged(x, y, true);
+            Picker.PointerChanged(x, y, true);
         }
 
         void CoreWindow_PointerReleased(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.PointerEventArgs args)
@@ -110,6 +118,7 @@ namespace TestApp2
             int x = (int)args.CurrentPoint.Position.X;
             int y = (int)args.CurrentPoint.Position.Y;
             PixDisplay.PointerChanged(x, y, false);
+            Picker.PointerChanged(x, y, false);
         }
         
         void CoreWindow_KeyDown(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.KeyEventArgs args)
