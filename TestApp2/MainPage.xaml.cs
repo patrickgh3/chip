@@ -16,6 +16,9 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Shapes;
+using System.Diagnostics;
+using Windows.Graphics.Display;
+using Windows.UI.ViewManagement;
 
 
 namespace TestApp2
@@ -39,6 +42,7 @@ namespace TestApp2
             Window.Current.CoreWindow.PointerReleased += CoreWindow_PointerReleased;
             Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
             Window.Current.CoreWindow.PointerWheelChanged += CoreWindow_PointerWheelChanged;
+            Window.Current.SizeChanged += Current_SizeChanged;
             
             Picker = new ColorPicker(colorSlider1, colorSlider2, colorSlider3, panel1, panel2, hueRect, overlayRect);
             PixDisplay = new PixelDisplay(pixelCanvas, debugText, Picker);
@@ -53,7 +57,7 @@ namespace TestApp2
             borderCheckBox.IsChecked = true;
             ChipIO.PixDisplay = PixDisplay;
         }
-
+        
         // EVENT HANDLERS //
 
         /// <summary>
@@ -63,6 +67,28 @@ namespace TestApp2
         /// property is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+        }
+
+        // TODO: view state changes logic goes here.
+        void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        {
+            Debug.WriteLine(Window.Current.Bounds);
+            switch (ApplicationView.Value)
+            {
+                case ApplicationViewState.FullScreenLandscape:
+                    
+                    break;
+                case ApplicationViewState.Snapped:
+                    
+                    break;
+                case ApplicationViewState.Filled:
+
+                    break;
+                case ApplicationViewState.FullScreenPortrait:
+
+                    break;
+            }
+            Debug.WriteLine(sender);
         }
 
         void CoreWindow_PointerMoved(Windows.UI.Core.CoreWindow sender, Windows.UI.Core.PointerEventArgs args)
