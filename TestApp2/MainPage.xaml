@@ -24,6 +24,7 @@
                             <ImageBrush ImageSource="Assets/color_picker_gradient.png"/>
                         </Rectangle.Fill>
                     </Rectangle>
+                    <Canvas x:Name="pickerCanvas"/>
                 </Grid>
                 <Slider x:Name="colorSlider1" Foreground="Transparent" Minimum="1" Maximum="360" Orientation="Vertical" />
                 <Slider x:Name="colorSlider2" Foreground="Transparent" Minimum="0" Maximum="100" Orientation="Vertical" Value="100" />

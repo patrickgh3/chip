@@ -151,7 +151,7 @@ namespace TestApp2
             PointerDown = b;
             bool pointerInsideGrid = pointerx > XOffset && pointerx < XOffset + Pixels.Length * PixelSize &&
                                      pointery > YOffset && pointery < YOffset + Pixels[0].Length * PixelSize;
-            PressedInsideGrid = pointerInsideGrid;
+            if (PointerDown) PressedInsideGrid = pointerInsideGrid;
             if (pointerInsideGrid)
             {
                 int x = (int)((pointerx - XOffset) / PixelSize);
@@ -212,7 +212,7 @@ namespace TestApp2
         public void PointerMoved(int pointerx, int pointery)
         {
             if (pointerx > XOffset && pointerx < XOffset + Pixels.Length * PixelSize &&
-                pointery > YOffset && pointery < YOffset + Pixels[0].Length * PixelSize)
+                pointery > YOffset && pointery < YOffset + Pixels[0].Length * PixelSize && PressedInsideGrid)
             {
                 int x = (int)((pointerx - XOffset) / PixelSize);
                 int y = (int)((pointery - YOffset) / PixelSize);
