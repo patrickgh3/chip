@@ -44,9 +44,9 @@ namespace TestApp2
             Window.Current.CoreWindow.PointerWheelChanged += CoreWindow_PointerWheelChanged;
             Window.Current.SizeChanged += Current_SizeChanged;
             
-            Picker = new ColorPicker(colorSlider1, colorSlider2, colorSlider3, panel1, panel2, hueRect, overlayRect, pickerCanvas);
+            Picker = new ColorPicker(colorSlider1, colorSlider2, colorSlider3, panel1, panel2, hueRect, overlayRect, pickerCanvas,
+                satRectBlack, satRectHue, valRectWhite, valRectHue);
             PixDisplay = new PixelDisplay(pixelCanvas, debugText, Picker);
-            pickerCanvas.PointerPressed += pickerCanvas_PointerPressed;
             
             // Set values now since PixDisplay isn't null.
             zoomSlider.Maximum = 10000;
@@ -57,11 +57,6 @@ namespace TestApp2
             zoomSlider.StepFrequency = 100;
             borderCheckBox.IsChecked = true;
             ChipIO.PixDisplay = PixDisplay;
-        }
-
-        void pickerCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            Debug.WriteLine("ohai");
         }
         
         // EVENT HANDLERS //

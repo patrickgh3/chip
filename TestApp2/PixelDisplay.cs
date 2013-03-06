@@ -82,7 +82,7 @@ namespace TestApp2
             PixelCanvas.Children.Clear();
             int minX = 0;
             int minY = 0;
-            int maxX = 1000; // TODO: replace these values (and the ones in GridOverlay.UpdateDisplay) with ones from the actual window size.
+            int maxX = 1200; // TODO: replace these values (and the ones in GridOverlay.UpdateDisplay) with ones from the actual window size.
             int maxY = 900;
             for (int x = 0; x < Pixels.Length; x++)
             {

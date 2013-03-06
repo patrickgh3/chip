@@ -32,20 +32,20 @@ namespace TestApp2
         {
             Display = d;
             GridBrush = new SolidColorBrush(Colors.LightGray);
-            GridBrushBorder = new SolidColorBrush(Colors.Gray);
+            GridBrushBorder = new SolidColorBrush(Colors.LightGray);
             GridBrushSelect = new SolidColorBrush(Colors.DimGray);
             SelectRect1 = new Rectangle() { Stroke = GridBrushSelect };
             SelectRect2 = new Rectangle() { Stroke = GridBrushSelect };
             BorderLines = new Line[4];
-            for (int i = 0; i < BorderLines.Length; i++) BorderLines[i] = new Line() { Stroke = GridBrushBorder };
+            for (int i = 0; i < BorderLines.Length; i++) BorderLines[i] = new Line() { Stroke = GridBrushBorder, StrokeThickness = 4, StrokeEndLineCap = PenLineCap.Triangle };
         }
 
         public void ResetLines()
         {
             HLines = new Line[Display.GetPixelsHeight()-1];
             VLines = new Line[Display.GetPixelsWidth()-1];
-            for (int i = 0; i < HLines.Length; i++) HLines[i] = new Line() { Stroke = GridBrush };
-            for (int i = 0; i < VLines.Length; i++) VLines[i] = new Line() { Stroke = GridBrush };
+            for (int i = 0; i < HLines.Length; i++) HLines[i] = new Line() { Stroke = GridBrush, StrokeThickness = 1 };
+            for (int i = 0; i < VLines.Length; i++) VLines[i] = new Line() { Stroke = GridBrush, StrokeThickness = 1 };
         }
 
 
@@ -58,7 +58,7 @@ namespace TestApp2
             int gridHeight = Display.GetPixelsHeight() * Display.PixelSize;
             int minX = 0;
             int minY = 0;
-            int maxX = 1000;
+            int maxX = 1200;
             int maxY = 900;
             for (int i = 0; i < HLines.Length; i++)
             {

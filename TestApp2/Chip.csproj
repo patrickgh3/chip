@@ -128,6 +128,7 @@
   <ItemGroup>
     <Content Include="Assets\butticon_load.png" />
     <Content Include="Assets\butticon_save.png" />
+    <Content Include="Assets\color_picker_bar.png" />
     <Content Include="Assets\color_picker_gradient.png" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\SmallLogo.png" />
