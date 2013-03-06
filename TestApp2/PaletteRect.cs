@@ -47,11 +47,15 @@ namespace TestApp2
         public void Select()
         {
             ((SolidColorBrush)OuterRect.Fill).Color = _color;
+            InnerRect.StrokeThickness = 0;
+            OuterRect.StrokeThickness = 2;
         }
 
         public void Unselect()
         {
             ((SolidColorBrush)OuterRect.Fill).Color = Colors.Transparent;
+            OuterRect.StrokeThickness = 0;
+            InnerRect.StrokeThickness = 2;
         }
     }
 }

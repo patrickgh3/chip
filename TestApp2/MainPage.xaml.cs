@@ -44,8 +44,9 @@ namespace TestApp2
             Window.Current.CoreWindow.PointerWheelChanged += CoreWindow_PointerWheelChanged;
             Window.Current.SizeChanged += Current_SizeChanged;
             
-            Picker = new ColorPicker(colorSlider1, colorSlider2, colorSlider3, panel1, panel2, hueRect, overlayRect, pickerCanvas,
-                satRectBlack, satRectHue, valRectWhite, valRectHue);
+            Picker = new ColorPicker(colorSlider1, colorSlider2, colorSlider3, panel1, panel2, panelExtra, hueRect, overlayRect, pickerCanvas,
+                satRectBlack, satRectHue, valRectWhite, valRectHue,
+                this, ((SolidColorBrush)pixelCanvas.Background).Color, ((SolidColorBrush)toolsPanel.Background).Color, Colors.LightGray);
             PixDisplay = new PixelDisplay(pixelCanvas, debugText, Picker);
             
             // Set values now since PixDisplay isn't null.
@@ -57,6 +58,21 @@ namespace TestApp2
             zoomSlider.StepFrequency = 100;
             borderCheckBox.IsChecked = true;
             ChipIO.PixDisplay = PixDisplay;
+        }
+
+        public void ChangeColorCanvas(Color c)
+        {
+            ((SolidColorBrush)pixelCanvas.Background).Color = c;
+        }
+
+        public void ChangeColorPanel(Color c)
+        {
+            ((SolidColorBrush)toolsPanel.Background).Color = c;
+        }
+
+        public void ChangeColorGrid(Color c)
+        {
+            PixDisplay.SetGridColor(c);
         }
         
         // EVENT HANDLERS //

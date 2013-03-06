@@ -20,7 +20,6 @@ namespace TestApp2
         Rectangle SelectRect2;
 
         SolidColorBrush GridBrush;
-        SolidColorBrush GridBrushBorder;
         SolidColorBrush GridBrushSelect;
 
         PixelDisplay Display;
@@ -32,12 +31,14 @@ namespace TestApp2
         {
             Display = d;
             GridBrush = new SolidColorBrush(Colors.LightGray);
-            GridBrushBorder = new SolidColorBrush(Colors.LightGray);
             GridBrushSelect = new SolidColorBrush(Colors.DimGray);
             SelectRect1 = new Rectangle() { Stroke = GridBrushSelect };
             SelectRect2 = new Rectangle() { Stroke = GridBrushSelect };
             BorderLines = new Line[4];
-            for (int i = 0; i < BorderLines.Length; i++) BorderLines[i] = new Line() { Stroke = GridBrushBorder, StrokeThickness = 4, StrokeEndLineCap = PenLineCap.Triangle };
+            for (int i = 0; i < BorderLines.Length; i++) BorderLines[i] = new Line() {
+                Stroke = GridBrush,
+                StrokeThickness = 4,
+                StrokeEndLineCap = PenLineCap.Triangle };
         }
 
         public void ResetLines()
@@ -119,6 +120,19 @@ namespace TestApp2
         public void SetRect1Position(int x, int y)
         {
 
+        }
+
+        public void SetColor(Color c)
+        {
+            //c.A = (byte)(255 / 2);
+            for (int i = 0; i < BorderLines.Length; i++)
+                ((SolidColorBrush)BorderLines[i].Stroke).Color = c;
+
+            for (int i = 0; i < VLines.Length; i++)
+                ((SolidColorBrush)VLines[i].Stroke).Color = c;
+
+            for (int i = 0; i < HLines.Length; i++)
+                ((SolidColorBrush)HLines[i].Stroke).Color = c;
         }
 
 
