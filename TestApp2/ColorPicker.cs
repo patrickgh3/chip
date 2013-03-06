@@ -18,6 +18,8 @@ namespace TestApp2
     /// Stores the logic for the color picker in the page's upper right corner. Uses HSV / HSB.
     /// /// </summary>
     /// Color picker tutorial: http://www.switchonthecode.com/tutorials/javascript-interactive-color-picker
+    /// SatVal gradient: http://tech.pro/_sotc/sites/default/files/64/source/color_picker_gradient.png
+    /// Hue gradient: http://tech.pro/_sotc/sites/default/files/64/source/color_picker_bar.png
     /// Absolute position of an element: http://stackoverflow.com/questions/12387449/how-to-get-the-absolute-position-of-an-element/12388558#12388558
     class ColorPicker
     {
@@ -29,6 +31,14 @@ namespace TestApp2
         Rectangle OverlayRect;
         Color HueColor;
 
+        Rectangle SatRectBlack;
+        Rectangle SatRectHue;
+        Color SatRectBlackColor = Colors.Black;
+
+        Rectangle ValRectWhite;
+        Rectangle ValRectHue;
+        Color ValRectWhiteColor = Colors.White;
+
         Slider Slider1;
         Slider Slider2;
         Slider Slider3;
@@ -37,7 +47,8 @@ namespace TestApp2
         public static Color CurrentColor;
         int PalIndex;
 
-        public ColorPicker(Slider s1, Slider s2, Slider s3, StackPanel p1, StackPanel p2, Rectangle hr, Rectangle or, Canvas c)
+        public ColorPicker(Slider s1, Slider s2, Slider s3, StackPanel p1, StackPanel p2, Rectangle hr, Rectangle or, Canvas c,
+            Rectangle sr1, Rectangle sr2, Rectangle vr1, Rectangle vr2)
         {
             Slider1 = s1;
             Slider2 = s2;
@@ -47,6 +58,11 @@ namespace TestApp2
             Slider3.ValueChanged += Slider3_ValueChanged;
             HueRect = hr;
             OverlayRect = or;
+            SatRectBlack = sr1;
+            SatRectHue = sr2;
+            ValRectWhite = vr1;
+            ValRectHue = vr2;
+
             PickerCanvas = c;
             Circle = new Ellipse() {
                 Width = 20,
@@ -58,22 +74,33 @@ namespace TestApp2
             PalRects = new PaletteRect[8];
             for (int i = 0; i < PalRects.Length; i++)
             {
-                Rectangle r = new Rectangle()
+                Rectangle inner = new Rectangle()
                 {
                     Width = 60,
                     Height = 60,
-                    Fill = new SolidColorBrush() { Color = Colors.Red },
-                    Stroke = new SolidColorBrush(),
-                    StrokeThickness = 5,
-                    Margin = new Windows.UI.Xaml.Thickness() { Left = 10, Right = 10, Top = 10, Bottom = 10}
+                    Fill = new SolidColorBrush() {  }
                 };
-                if (i < PalRects.Length / 2) p1.Children.Add(r);
-                else p2.Children.Add(r);
-
-                PalRects[i] = new PaletteRect(r,i,this);
+                Rectangle outer = new Rectangle()
+                {
+                    Width = 80,
+                    Height = 80,
+                    Fill = new SolidColorBrush() {  }
+                };
+                Grid g = new Grid()
+                {
+                    Margin = new Windows.UI.Xaml.Thickness() { Left = 5, Right = 5, Top = 5, Bottom = 5 }
+                };
+                if (i < PalRects.Length / 2) p1.Children.Add(g);
+                else p2.Children.Add(g);
+                g.Children.Add(outer);
+                g.Children.Add(inner);
+                PalRects[i] = new PaletteRect(outer,inner,i,this);
+                PalRects[i].Color = Colors.Red;
+                PalRects[i].Unselect();
             }
             HueColor = Colors.White;
             ColorSelected(0);
+            UpdateSliderBackgrounds();
         }
         
         public void ColorSelected(int index)
@@ -106,6 +133,8 @@ namespace TestApp2
             HueColor.G = g;
             HueColor.B = b;
             ((SolidColorBrush)HueRect.Fill).Color = HueColor;
+
+            UpdateSliderBackgrounds();
         }
 
         private void UpdatePositions()
@@ -116,6 +145,7 @@ namespace TestApp2
             Slider2.Value = sat * 100;
             Slider3.Value = val * 100;
             UpdateCirclePosition();
+            UpdateSliderBackgrounds();
         }
 
         private void UpdateCirclePosition()
@@ -190,6 +220,17 @@ namespace TestApp2
             CurrentColor.G = g;
             CurrentColor.B = b;
             PalRects[PalIndex].Color = CurrentColor;
+        }
+
+        private void UpdateSliderBackgrounds()
+        {
+            ((SolidColorBrush)SatRectHue.Fill).Color = HueColor;
+            ((SolidColorBrush)ValRectHue.Fill).Color = HueColor;
+            SatRectBlackColor.A = (byte)((100.0 - Slider3.Value)/100*256);
+            ValRectWhiteColor.A = (byte)((100.0 - Slider2.Value)/100*256);
+            //Debug.WriteLine(SatRectBlackColor.A);
+            ((SolidColorBrush)SatRectBlack.Fill).Color = SatRectBlackColor;
+            ((SolidColorBrush)ValRectWhite.Fill).Color = ValRectWhiteColor;
         }
     }
 }

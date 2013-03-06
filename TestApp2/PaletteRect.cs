@@ -18,37 +18,40 @@ namespace TestApp2
             set
             {
                 _color = value;
-                ((SolidColorBrush)Rect.Fill).Color = value;
+                ((SolidColorBrush)OuterRect.Fill).Color = value;
+                ((SolidColorBrush)InnerRect.Fill).Color = value;
             }
         }
-        public Rectangle Rect { get; private set; }
+        public Rectangle OuterRect { get; private set; }
         public int index { get; private set; }
         ColorPicker Picker;
+        Rectangle InnerRect;
 
         static SolidColorBrush SelectedStrokeBrush = new SolidColorBrush() { Color = Colors.Gray };
 
-        public PaletteRect(Rectangle r, int i, ColorPicker p)
+        public PaletteRect(Rectangle rOuter, Rectangle rInner, int i, ColorPicker p)
         {
-            Rect = r;
-            _color = ((SolidColorBrush)Rect.Fill).Color;
+            OuterRect = rOuter;
+            InnerRect = rInner;
+            _color = ((SolidColorBrush)OuterRect.Fill).Color;
             index = i;
             Picker = p;
-            Rect.PointerPressed += Rect_Selected;
+            InnerRect.PointerPressed += InnerRect_Selected;
         }
 
-        void Rect_Selected(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        void InnerRect_Selected(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             Picker.ColorSelected(index);
         }
 
         public void Select()
         {
-            Rect.Stroke = SelectedStrokeBrush;
+            ((SolidColorBrush)OuterRect.Fill).Color = _color;
         }
 
         public void Unselect()
         {
-            Rect.Stroke = null;
+            ((SolidColorBrush)OuterRect.Fill).Color = Colors.Transparent;
         }
     }
 }
