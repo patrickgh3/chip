@@ -395,6 +395,7 @@ namespace TestApp2
 
         private void RectangleTool(int x1, int y1, int x2, int y2, Color c)
         {
+            Pixels[x1][y1].Color = c;
             int xo = Math.Sign(x2 - x1);
             for (int x = x1; (x <= x2 && x2 > x1) || (x >= x2 && x1 > x2); x += xo)
             {
@@ -515,6 +516,11 @@ namespace TestApp2
         public int GetPixelsHeight()
         {
             return Pixels[0].Length;
+        }
+
+        public void SetGridColor(Color c)
+        {
+            Overlay.SetColor(c);
         }
 
     }

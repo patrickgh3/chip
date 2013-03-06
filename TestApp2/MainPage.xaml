@@ -14,8 +14,8 @@
             <ColumnDefinition Width="483*"/>
             <ColumnDefinition Width="200*"/>
         </Grid.ColumnDefinitions>
-        <Canvas x:Name="pixelCanvas" Margin="0"/>
-        <StackPanel Grid.Column="1" Margin="0" Background="#FFD6D6D6">
+        <Canvas x:Name="pixelCanvas" Margin="0" Background="White"/>
+        <StackPanel x:Name="toolsPanel" Grid.Column="1" Margin="0" Background="#FFD6D6D6">
             <StackPanel Orientation="Horizontal" Margin="10,10,0,10">
                 <Grid>
                     <Rectangle x:Name="hueRect" Width="256" Height="256" Fill="Red" />
@@ -63,6 +63,7 @@
             </StackPanel>
             <StackPanel x:Name="panel1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0"/>
             <StackPanel x:Name="panel2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0"/>
+            <StackPanel x:Name="panelExtra" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,30,0"/>
             <StackPanel Orientation="Horizontal" Margin="0">
                 <RadioButton x:Name="radio1" IsChecked="True" Checked="Radio1_Checked" />
                 <RadioButton x:Name="radio2" Checked="Radio2_Checked" />
