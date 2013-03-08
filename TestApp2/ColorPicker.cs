@@ -93,8 +93,8 @@ namespace TestApp2
                     };
                     outer = new Rectangle()
                     {
-                        Width = 80,
-                        Height = 80,
+                        Width = 90,
+                        Height = 90,
                         Fill = new SolidColorBrush() { }
                     };
                 }
@@ -135,7 +135,10 @@ namespace TestApp2
             }
             HueColor = Colors.White;
             ColorSelected(0);
-            UpdateSliderBackgrounds();
+            Random rnd = new Random();
+            Slider1.Value = rnd.NextDouble()*360;
+            Slider2.Value = 100;
+            Slider3.Value = 100;
         }
         
         public void ColorSelected(int index)

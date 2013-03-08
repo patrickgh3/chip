@@ -28,6 +28,9 @@ namespace TestApp2
     /// </summary>
     public sealed partial class MainPage : LayoutAwarePage
     {
+        public static int CanvasMinX { get; private set; }
+        public static int CanvasMaxX { get; private set; }
+
         PixelDisplay PixDisplay;
         ColorPicker Picker;
         Boolean CtrlDown;
@@ -43,7 +46,9 @@ namespace TestApp2
             Window.Current.CoreWindow.PointerMoved += CoreWindow_PointerMoved;
             Window.Current.CoreWindow.PointerWheelChanged += CoreWindow_PointerWheelChanged;
             Window.Current.SizeChanged += Current_SizeChanged;
-            
+
+            CanvasMinX = 0;
+            CanvasMaxX = 1150;
             Picker = new ColorPicker(colorSlider1, colorSlider2, colorSlider3, panel1, panel2, panelExtra, hueRect, overlayRect, pickerCanvas,
                 satRectBlack, satRectHue, valRectWhite, valRectHue,
                 this, ((SolidColorBrush)pixelCanvas.Background).Color, ((SolidColorBrush)toolsPanel.Background).Color, Colors.LightGray);
@@ -120,7 +125,7 @@ namespace TestApp2
         {
             int x = (int)args.CurrentPoint.Position.X;
             int y = (int)args.CurrentPoint.Position.Y;
-            PixDisplay.PointerChanged(x, y, true);
+            if (x > CanvasMinX && x < CanvasMaxX) PixDisplay.PointerChanged(x, y, true);
             Picker.PointerChanged(x, y, true);
         }
 

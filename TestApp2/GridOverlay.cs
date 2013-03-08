@@ -57,9 +57,9 @@ namespace TestApp2
         {
             int gridWidth = Display.GetPixelsWidth() * Display.PixelSize;
             int gridHeight = Display.GetPixelsHeight() * Display.PixelSize;
-            int minX = 0;
+            int minX = MainPage.CanvasMinX;
+            int maxX = MainPage.CanvasMaxX;
             int minY = 0;
-            int maxX = 1200;
             int maxY = 900;
             for (int i = 0; i < HLines.Length; i++)
             {
