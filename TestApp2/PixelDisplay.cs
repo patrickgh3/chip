@@ -80,9 +80,9 @@ namespace TestApp2
             YOffset = YCenter - gridHeight / 2;
 
             PixelCanvas.Children.Clear();
-            int minX = 0;
+            int minX = MainPage.CanvasMinX;
+            int maxX = MainPage.CanvasMaxX; // TODO: replace these values (and the ones in GridOverlay.UpdateDisplay) with ones from the actual window size.
             int minY = 0;
-            int maxX = 1200; // TODO: replace these values (and the ones in GridOverlay.UpdateDisplay) with ones from the actual window size.
             int maxY = 900;
             for (int x = 0; x < Pixels.Length; x++)
             {
@@ -152,106 +152,128 @@ namespace TestApp2
             bool pointerInsideGrid = pointerx > XOffset && pointerx < XOffset + Pixels.Length * PixelSize &&
                                      pointery > YOffset && pointery < YOffset + Pixels[0].Length * PixelSize;
             if (PointerDown) PressedInsideGrid = pointerInsideGrid;
-            if (pointerInsideGrid)
+
+            int x = (int)((pointerx - XOffset) / PixelSize);
+            int y = (int)((pointery - YOffset) / PixelSize);
+
+            if (Tool == DrawTool.Pencil)
             {
-                int x = (int)((pointerx - XOffset) / PixelSize);
-                int y = (int)((pointery - YOffset) / PixelSize);
                 if (PointerDown)
                 {
-                    if (Tool == DrawTool.Pencil)
-                    {
-                        PencilTool(x, y, ColorPicker.CurrentColor);
-                        Point1.x = x;
-                        Point1.y = y;
-                    }
-                    else if (Tool == DrawTool.Dropper)
-                    {
-                        Picker.SetCurrentColor(Pixels[x][y].Color);
-                    }
-                    else if (Tool == DrawTool.FillBucket)
-                    {
-                        if (Pixels[x][y].Color != ColorPicker.CurrentColor) FillTool(x, y, ColorPicker.CurrentColor, Pixels[x][y].Color);
-                        AddUndoAction();
-                    }
-                    else if (Tool == DrawTool.Line)
-                    {
-                        Point1.x = x;
-                        Point1.y = y;
-                        Point2.x = x;
-                        Point2.y = y;
-                        PencilTool(x, y, ColorPicker.CurrentColor);
-                    }
-                    else if (Tool == DrawTool.Rectangle)
-                    {
-                        Point1.x = x;
-                        Point1.y = y;
-                        Point2.x = x;
-                        Point2.y = y;
-                        PencilTool(x, y, ColorPicker.CurrentColor);
-                    }
-                    else if (Tool == DrawTool.Oval)
-                    {
-                        Point1.x = x;
-                        Point1.y = y;
-                        Point2.x = x;
-                        Point2.y = y;
-                        PencilTool(x, y, ColorPicker.CurrentColor);
-                    }
+                    LineTool(x, y, x, y, ColorPicker.CurrentColor);
+                    Point1.x = x;
+                    Point1.y = y;
                 }
+                else
+                    AddUndoAction();
             }
-            if (!PointerDown)
+            else if (Tool == DrawTool.FillBucket && PointerDown && pointerInsideGrid)
             {
-                if (Tool == DrawTool.Pencil) AddUndoAction();
-                else if (Tool == DrawTool.FillBucket) { }
-                else if (Tool == DrawTool.Line) AddUndoAction();
-                else if (Tool == DrawTool.Rectangle) AddUndoAction();
-                else if (Tool == DrawTool.Oval) AddUndoAction();
+                if (Pixels[x][y].Color != ColorPicker.CurrentColor)
+                    FillTool(x, y, ColorPicker.CurrentColor, Pixels[x][y].Color);
+                AddUndoAction();
             }
+            else if (Tool == DrawTool.Line)
+            {
+                if (PointerDown && pointerInsideGrid)
+                {
+                    Point1.x = x;
+                    Point1.y = y;
+                    Point2.x = x;
+                    Point2.y = y;
+                    PencilTool(x, y, ColorPicker.CurrentColor);
+                }
+                else
+                    AddUndoAction();
+            }
+            else if (Tool == DrawTool.Rectangle)
+            {
+                if (PointerDown && pointerInsideGrid)
+                {
+                    Point1.x = x;
+                    Point1.y = y;
+                    Point2.x = x;
+                    Point2.y = y;
+                    PencilTool(x, y, ColorPicker.CurrentColor);
+                }
+                else
+                    AddUndoAction();
+            }
+            else if (Tool == DrawTool.Oval)
+            {/*
+                if (PointerDown && PressedInsideGrid)
+                {
+                    Point1.x = x;
+                    Point1.y = y;
+                    Point2.x = x;
+                    Point2.y = y;
+                    PencilTool(x, y, ColorPicker.CurrentColor);
+                }
+                else
+                    AddUndoAction();
+              * */
+            }
+            else if (Tool == DrawTool.Dropper && PointerDown && pointerInsideGrid)
+            {
+                Picker.SetCurrentColor(Pixels[x][y].Color);
+            }
+            else if (Tool == DrawTool.Grab) { }
         }
 
         public void PointerMoved(int pointerx, int pointery)
         {
-            if (pointerx > XOffset && pointerx < XOffset + Pixels.Length * PixelSize &&
-                pointery > YOffset && pointery < YOffset + Pixels[0].Length * PixelSize && PressedInsideGrid)
-            {
-                int x = (int)((pointerx - XOffset) / PixelSize);
-                int y = (int)((pointery - YOffset) / PixelSize);
+            bool pointerInsideGrid = pointerx > XOffset && pointerx < XOffset + Pixels.Length * PixelSize &&
+                pointery > YOffset && pointery < YOffset + Pixels[0].Length * PixelSize;
 
-                if (Tool == DrawTool.Pencil && PointerDown)
-                {
-                    LineTool(Point1.x, Point1.y, x, y, ColorPicker.CurrentColor);
-                    Point1.x = x;
-                    Point1.y = y;
-                }
-                else if (Tool == DrawTool.FillBucket) { }
-                else if (Tool == DrawTool.Line && PointerDown)
-                {
-                    Point2.x = x;
-                    Point2.y = y;
-                    UpdatePixelColors(PreviousColors);
-                    LineTool(Point1.x, Point1.y, Point2.x, Point2.y, ColorPicker.CurrentColor);
-                }
-                else if (Tool == DrawTool.Rectangle && PointerDown)
-                {
-                    Point2.x = x;
-                    Point2.y = y;
-                    UpdatePixelColors(PreviousColors);
-                    RectangleTool(Point1.x, Point1.y, Point2.x, Point2.y, ColorPicker.CurrentColor);
-                }
-                else if (Tool == DrawTool.Oval && PointerDown)
-                {
-                    Point2.x = x;
-                    Point2.y = y;
-                    UpdatePixelColors(PreviousColors);
-                    OvalTool(Point1.x, Point1.y, Point2.x, Point2.y, ColorPicker.CurrentColor);
-                }
+            int x = (int)((pointerx - XOffset) / PixelSize);
+            int y = (int)((pointery - YOffset) / PixelSize);
+
+            if (Tool == DrawTool.Pencil && PointerDown)
+            {
+                LineTool(Point1.x, Point1.y, x, y, ColorPicker.CurrentColor);
+                Point1.x = x;
+                Point1.y = y;
             }
-            if (Tool == DrawTool.Grab && PointerDown && PressedInsideGrid)
+            else if (Tool == DrawTool.FillBucket) { }
+            else if (Tool == DrawTool.Line && PointerDown && PressedInsideGrid)
+            {
+                Point2.x = x;
+                Point2.y = y;
+                UpdatePixelColors(PreviousColors);
+                LineTool(Point1.x, Point1.y, Point2.x, Point2.y, ColorPicker.CurrentColor);
+            }
+            else if (Tool == DrawTool.Rectangle && PointerDown && PressedInsideGrid)
+            {
+                Point2.x = x;
+                Point2.y = y;
+                if (!pointerInsideGrid)
+                {
+                    Point2.x = Math.Max(0, Math.Min(Pixels.Length - 1, Point2.x));
+                    Point2.y = Math.Max(0, Math.Min(Pixels[0].Length - 1, Point2.y));
+                }
+                UpdatePixelColors(PreviousColors);
+                RectangleTool(Point1.x, Point1.y, Point2.x, Point2.y, ColorPicker.CurrentColor);
+            }
+            else if (Tool == DrawTool.Oval && PointerDown && PressedInsideGrid && pointerInsideGrid)
+            {
+                /*
+                Point2.x = x;
+                Point2.y = y;
+                UpdatePixelColors(PreviousColors);
+                OvalTool(Point1.x, Point1.y, Point2.x, Point2.y, ColorPicker.CurrentColor);
+                 * */
+            }
+            else if (Tool == DrawTool.Dropper && PointerDown && pointerInsideGrid)
+            {
+                Picker.SetCurrentColor(Pixels[x][y].Color);
+            }
+            else if (Tool == DrawTool.Grab && PointerDown && PressedInsideGrid)
             {
                 XCenter += pointerx - PreviousPoint.x;
                 YCenter += pointery - PreviousPoint.y;
                 UpdateDisplay();
             }
+
             PreviousPoint.x = pointerx;
             PreviousPoint.y = pointery;
         }
@@ -360,8 +382,8 @@ namespace TestApp2
 
         private void LineTool(int x1, int y1, int x2, int y2, Color c)
         {
-            Pixels[x1][y1].Color = c;
-            Pixels[x2][y2].Color = c;
+            if (!(x1 < 0 || x1 > Pixels[0].Length - 1 || y1 < 0 || y1 > Pixels[0].Length - 1)) Pixels[x1][y1].Color = c;
+            if (!(x2 < 0 || x2 > Pixels[0].Length - 1 || y2 < 0 || y2 > Pixels[0].Length - 1)) Pixels[x2][y2].Color = c;
             PrecisePoint slope = new PrecisePoint() { x = -1, y = -1 };
             int xdistance = Math.Abs(x2 - x1);
             int ydistance = Math.Abs(y2 - y1);
@@ -375,7 +397,8 @@ namespace TestApp2
                 double y = y1 + 0.5 + slope.y;
                 for (int x = x1 + (int)slope.x; (x2 - x1 > 0 && x < x2) || (x2 - x1 < 0 && x > x2); x += (int)slope.x)
                 {
-                    Pixels[x][(int)y].Color = c;
+                    if (!(x < 0 || x > Pixels.Length - 1 || (int)y < 0 || (int)y > Pixels[0].Length - 1))
+                        Pixels[x][(int)y].Color = c;
                     y += slope.y;
                 }
             }
@@ -387,7 +410,8 @@ namespace TestApp2
                 double x = x1 + 0.5 + slope.x;
                 for (int y = y1 + (int)slope.y; (y2 - y1 > 0 && y < y2) || (y2 - y1 < 0 && y > y2); y += (int)slope.y)
                 {
-                    Pixels[(int)x][y].Color = c;
+                    if (!((int)x < 0 || (int)x > Pixels.Length - 1 || y < 0 || y > Pixels[0].Length - 1))
+                        Pixels[(int)x][y].Color = c;
                     x += slope.x;
                 }
             }
@@ -522,6 +546,6 @@ namespace TestApp2
         {
             Overlay.SetColor(c);
         }
-
+        
     }
 }
