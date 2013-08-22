@@ -8,103 +8,116 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d">
-    
     <Grid x:Name="layoutRoot" Background="{StaticResource ApplicationPageBackgroundThemeBrush}" >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="483*"/>
-            <ColumnDefinition Width="200*"/>
-        </Grid.ColumnDefinitions>
-        <Canvas x:Name="pixelCanvas" Margin="0" Background="White"/>
-        <StackPanel x:Name="toolsPanel" Grid.Column="1" Margin="0" Background="#FFD6D6D6">
-            <StackPanel Orientation="Horizontal" Margin="20,20,0,20">
-                <Grid>
-                    <Rectangle x:Name="hueRect" Width="256" Height="256" Fill="Red" />
-                    <Rectangle x:Name="overlayRect" Width="256" Height="256" >
+        
+            <Grid x:Name="mainGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+            <Canvas x:Name="pixelCanvas" Margin="0" Background="Red"/>
+                
+                <StackPanel x:Name="toolsPanel" Grid.Column="1" Margin="0" Background="#FFD6D6D6">
+                    
+                    <StackPanel Orientation="Horizontal" Margin="20,20,0,20">
+                        <Grid>
+                            <Rectangle x:Name="hueRect" Width="256" Height="256" Fill="Red" />
+                            <Rectangle x:Name="overlayRect" Width="256" Height="256" >
+                                <Rectangle.Fill>
+                                    <ImageBrush ImageSource="Assets/color_picker_gradient.png"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Canvas x:Name="pickerCanvas"/>
+                        </Grid>
+                        <Grid>
+                            <Rectangle Width="10" Height="256" >
+                                <Rectangle.Fill>
+                                    <ImageBrush ImageSource="Assets/color_picker_bar.png"/>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Slider x:Name="colorSlider1" Foreground="Transparent" Minimum="1" Maximum="360" Orientation="Vertical" ToolTipService.ToolTip="Hue" Style="{StaticResource HsvSlider}" />
+                        </Grid>
+                        <Grid>
+                            <Rectangle x:Name="satRectHue" Fill="Red" Width="10" Height="256" />
+                            <Rectangle Width="10" Height="256" >
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop/>
+                                        <GradientStop Color="White" Offset="1"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Rectangle x:Name="satRectBlack" Width="10" Height="256" Fill="Black" />
+                            <Slider x:Name="colorSlider2" Foreground="Transparent" Minimum="0" Maximum="100" Orientation="Vertical" Value="100" ToolTipService.ToolTip="Saturation" Style="{StaticResource HsvSlider}" />
+                        </Grid>
+                        <Grid>
+                            <Rectangle x:Name="valRectHue" Fill="#FFFF0101" Width="10" Height="256" />
+                            <Rectangle x:Name="valRectWhite" Fill="White" Width="10" Height="256" />
+                            <Rectangle Width="10" Height="256" >
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                        <GradientStop Color="Black" Offset="1"/>
+                                        <GradientStop Color="Transparent"/>
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+                            <Slider x:Name="colorSlider3" Foreground="Transparent" Minimum="0" Maximum="100" Orientation="Vertical" Value="100" ToolTipService.ToolTip="Value" Style="{StaticResource HsvSlider}" Background="#00000000" />
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel x:Name="panel1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0"/>
+                    <StackPanel x:Name="panel2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0"/>
+                    <StackPanel x:Name="panelExtra" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,30,0"/>
+                    <StackPanel Orientation="Horizontal" Margin="0">
+                        <RadioButton x:Name="radio1" IsChecked="True" Checked="Radio1_Checked" />
+                        <RadioButton x:Name="radio2" Checked="Radio2_Checked" />
+                        <RadioButton x:Name="radio3" Checked="Radio3_Checked" />
+                        <RadioButton x:Name="radio4" Checked="Radio4_Checked" />
+                        <RadioButton x:Name="radio5" Checked="Radio5_Checked" />
+                        <RadioButton x:Name="radio6" Checked="Radio6_Checked" />
+                        <RadioButton x:Name="radio7" Checked="Radio7_Checked" />
+                    </StackPanel>
+                    <Slider x:Name="zoomSlider" ValueChanged="ZoomSlider_ValueChanged" Margin="0" Foreground="Transparent" Background="#19000000" ToolTipService.ToolTip="Zoom" />
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox x:Name="borderCheckBox" Checked="BorderCheckBox_Checked" Unchecked="BorderCheckBox_Unchecked" ToolTipService.ToolTip="Grid Border" IsChecked="False" />
+                        <CheckBox x:Name="gridCheckBox" Checked="GridCheckBox_Checked" Unchecked="GridCheckBox_Unchecked" ToolTipService.ToolTip="Grid" />
+                        <Button x:Name="zoomResetButton" Click="ZoomResetButton_Clicked" Content="Pos" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="loadButton" Width="48" Height="48" Style="{StaticResource IconButton}" Click="LoadButton_Clicked" Content="Load"/>
+                        <Button x:Name="saveButton" Width="48" Height="48" Style="{StaticResource IconButton}" Click="SaveButton_Clicked">
+                            <Button.Background>
+                                <ImageBrush ImageSource="Assets/butticon_save.png"/>
+                            </Button.Background>
+                            <Button.Foreground>
+                                <ImageBrush/>
+                            </Button.Foreground>
+                            <Button.BorderBrush>
+                                <ImageBrush/>
+                            </Button.BorderBrush>
+                        </Button>
+                    </StackPanel>
+                    <Rectangle Height="96" Width="96" >
                         <Rectangle.Fill>
-                            <ImageBrush ImageSource="Assets/color_picker_gradient.png"/>
+                            <ImageBrush ImageSource="ms-appx:/Assets/pencil_test.png" Stretch="None"/>
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Canvas x:Name="pickerCanvas"/>
-                </Grid>
-                <Grid>
-                    <Rectangle Width="10" Height="256" >
-                        <Rectangle.Fill>
-                            <ImageBrush ImageSource="Assets/color_picker_bar.png"/>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    <Slider x:Name="colorSlider1" Foreground="Transparent" Minimum="1" Maximum="360" Orientation="Vertical" ToolTipService.ToolTip="Hue" Style="{StaticResource HsvSlider}" />
-                </Grid>
-                <Grid>
-                    <Rectangle x:Name="satRectHue" Fill="Red" Width="10" Height="256" />
-                    <Rectangle Width="10" Height="256" >
-                        <Rectangle.Fill>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop/>
-                                <GradientStop Color="White" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    <Rectangle x:Name="satRectBlack" Width="10" Height="256" Fill="Black" />
-                    <Slider x:Name="colorSlider2" Foreground="Transparent" Minimum="0" Maximum="100" Orientation="Vertical" Value="100" ToolTipService.ToolTip="Saturation" Style="{StaticResource HsvSlider}" />
-                </Grid>
-                <Grid>
-                    <Rectangle x:Name="valRectHue" Fill="#FFFF0101" Width="10" Height="256" />
-                    <Rectangle x:Name="valRectWhite" Fill="White" Width="10" Height="256" />
-                    <Rectangle Width="10" Height="256" >
-                        <Rectangle.Fill>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="1"/>
-                                <GradientStop Color="Transparent"/>
-                            </LinearGradientBrush>
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    <Slider x:Name="colorSlider3" Foreground="Transparent" Minimum="0" Maximum="100" Orientation="Vertical" Value="100" ToolTipService.ToolTip="Value" Style="{StaticResource HsvSlider}" Background="#00000000" />
-                </Grid>
-            </StackPanel>
-            <StackPanel x:Name="panel1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0"/>
-            <StackPanel x:Name="panel2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0"/>
-            <StackPanel x:Name="panelExtra" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,30,0"/>
-            <StackPanel Orientation="Horizontal" Margin="0">
-                <RadioButton x:Name="radio1" IsChecked="True" Checked="Radio1_Checked" />
-                <RadioButton x:Name="radio2" Checked="Radio2_Checked" />
-                <RadioButton x:Name="radio3" Checked="Radio3_Checked" />
-                <RadioButton x:Name="radio4" Checked="Radio4_Checked" />
-                <RadioButton x:Name="radio5" Checked="Radio5_Checked" />
-                <RadioButton x:Name="radio6" Checked="Radio6_Checked" />
-                <RadioButton x:Name="radio7" Checked="Radio7_Checked" />
-            </StackPanel>
-            <Slider x:Name="zoomSlider" ValueChanged="ZoomSlider_ValueChanged" Margin="0" Foreground="Transparent" Background="#19000000" ToolTipService.ToolTip="Zoom" />
-            <StackPanel Orientation="Horizontal">
-                <CheckBox x:Name="borderCheckBox" Checked="BorderCheckBox_Checked" Unchecked="BorderCheckBox_Unchecked" ToolTipService.ToolTip="Grid Border" IsChecked="False" />
-                <CheckBox x:Name="gridCheckBox" Checked="GridCheckBox_Checked" Unchecked="GridCheckBox_Unchecked" ToolTipService.ToolTip="Grid" />
-                <Button x:Name="zoomResetButton" Click="ZoomResetButton_Clicked" Content="Pos" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Button x:Name="loadButton" Width="48" Height="48" Style="{StaticResource IconButton}" Click="LoadButton_Clicked" Content="Load"/> 
-                <Button x:Name="saveButton" Width="48" Height="48" Style="{StaticResource IconButton}" Click="SaveButton_Clicked">
-                    <Button.Background>
-                        <ImageBrush ImageSource="Assets/butticon_save.png"/>
-                    </Button.Background>
-                    <Button.Foreground>
-                        <ImageBrush/>
-                    </Button.Foreground>
-                    <Button.BorderBrush>
-                        <ImageBrush/>
-                    </Button.BorderBrush>
-                </Button>
-            </StackPanel>
-            <TextBlock x:Name="debugText" Style="{StaticResource SubheaderTextStyle}" Text="asdf" Margin="0" />
-        </StackPanel>
+                    <TextBlock x:Name="debugText" Style="{StaticResource SubheaderTextStyle}" Text="asdf" Margin="0" />
 
-        <VisualStateManager.VisualStateGroups>
+                </StackPanel>
 
-            <VisualStateGroup x:Name="ApplicationViewStates">
-                <VisualState x:Name="FullScreenLandscape"/>
-                <VisualState x:Name="Filled"/>
-                <VisualState x:Name="FullScreenPortrait"/>
-                <VisualState x:Name="Snapped"/>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+            <VisualStateManager.VisualStateGroups>
+
+                    <VisualStateGroup x:Name="ApplicationViewStates">
+                        <VisualState x:Name="FullScreenLandscape"/>
+                        <VisualState x:Name="Filled"/>
+                        <VisualState x:Name="FullScreenPortrait"/>
+                        <VisualState x:Name="Snapped"/>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+        
     </Grid>
+        
+    </Grid>
+        
 
 </common:LayoutAwarePage>

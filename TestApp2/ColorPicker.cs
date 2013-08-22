@@ -55,7 +55,8 @@ namespace TestApp2
 
         public ColorPicker(Slider s1, Slider s2, Slider s3, StackPanel p1, StackPanel p2, StackPanel pe, Rectangle hr, Rectangle or, Canvas c,
             Rectangle sr1, Rectangle sr2, Rectangle vr1, Rectangle vr2,
-            MainPage p, Color canvasInitColor, Color panelInitColor, Color gridInitColor)
+            MainPage p, Color canvasInitColor, Color panelInitColor, Color gridInitColor,
+            double width, double height)
         {
             Slider1 = s1;
             Slider2 = s2;
