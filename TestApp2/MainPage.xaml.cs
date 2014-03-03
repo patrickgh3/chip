@@ -35,9 +35,17 @@ namespace TestApp2
         ColorPicker Picker;
         Boolean CtrlDown;
 
+        double canvasWidth;
+        double panelWidth;
+        double height;
+
         public MainPage()
         {
             this.InitializeComponent();
+
+            canvasWidth = 1600;
+            panelWidth = 500; // TODO: get these values from the actual full-screen resolution and the canvas:panel ratio.
+            height = 900;
 
             Window.Current.CoreWindow.KeyDown += CoreWindow_KeyDown;
             Window.Current.CoreWindow.KeyUp += CoreWindow_KeyUp;
@@ -51,7 +59,8 @@ namespace TestApp2
             CanvasMaxX = 1150;
             Picker = new ColorPicker(colorSlider1, colorSlider2, colorSlider3, panel1, panel2, panelExtra, hueRect, overlayRect, pickerCanvas,
                 satRectBlack, satRectHue, valRectWhite, valRectHue,
-                this, ((SolidColorBrush)pixelCanvas.Background).Color, ((SolidColorBrush)toolsPanel.Background).Color, Colors.LightGray);
+                this, ((SolidColorBrush)pixelCanvas.Background).Color, ((SolidColorBrush)toolsPanel.Background).Color, Colors.LightGray,
+                canvasWidth, height);
             PixDisplay = new PixelDisplay(pixelCanvas, debugText, Picker);
             
             // Set values now since PixDisplay isn't null.
@@ -98,16 +107,16 @@ namespace TestApp2
             switch (ApplicationView.Value)
             {
                 case ApplicationViewState.FullScreenLandscape:
-                    
+                    //layoutRoot.ColumnDefinitions[1].Width = new GridLength(panelWidth);
                     break;
                 case ApplicationViewState.Snapped:
-                    
+                    //layoutRoot.ColumnDefinitions[1].Width = new GridLength(0);
                     break;
                 case ApplicationViewState.Filled:
-
+                    //layoutRoot.ColumnDefinitions[1].Width = new GridLength(panelWidth);
                     break;
                 case ApplicationViewState.FullScreenPortrait:
-
+                    //layoutRoot.ColumnDefinitions[1].Width = new GridLength(panelWidth);
                     break;
             }
             Debug.WriteLine(sender);

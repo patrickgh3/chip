@@ -131,6 +131,7 @@
     <Content Include="Assets\color_picker_bar.png" />
     <Content Include="Assets\color_picker_gradient.png" />
     <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\pencil_test.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
